@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-8 pastel">
+    <h4>Inventario</h4>
+    <table class="table">
+      <thead><tr><th>Código</th><th>Producto</th><th>Precio venta</th><th>Stock</th><th>Acción</th></tr></thead>
+      <tbody>
+        {% for p in productos %}
+          <tr>
+            <td>{{ p['codigo'] }}</td>
+            <td>{{ p['producto'] }}</td>
+            <td>${{ '%.2f'|format(p['precio_venta']) }}</td>
+            <td>{{ p['stock'] }}</td>
+            <td>
+              <form method="post" action="{{ url_for('add_to_cart') }}" class="d-inline-flex">
+                <input type="hidden" name="codigo" value="{{ p['codigo'] }}">
+                <input type="number" name="cantidad" min="1" max="{{ p['stock'] }}" value="1" class="form-control form-control-sm me-2" style="width:80px;">
+                <button class="btn btn-success btn-sm">Agregar</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-4 pastel">
+    <h5>Agregar producto</h5>
+    {% if rol == 'admin' %}
+    <form method="post">
+      <div class="mb-2"><input class="form-control" name="producto" placeholder="Nombre" required></div>
+      <div class="mb-2"><input class="form-control" name="precio_compra" placeholder="Precio compra" type="number" step="0.01" required></div>
+      <div class="mb-2"><input class="form-control" name="precio_venta" placeholder="Precio venta" type="number" step="0.01" required></div>
+      <div class="mb-2"><input class="form-control" name="stock" placeholder="Stock" type="number" required></div>
+      <button class="btn btn-primary w-100">Agregar</button>
+    </form>
+    {% else %}
+      <div class="alert alert-info">Solo administradores pueden agregar productos.</div>
+    {% endif %}
+
+    <hr>
+    <a class="btn btn-outline-secondary w-100 mt-2" href="{{ url_for('carrito') }}">Ver carrito</a>
+    {% if session.get('rol') == 'admin' %}
+      <a class="btn btn-outline-dark w-100 mt-2" href="{{ url_for('usuarios') }}">Gestionar usuarios</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="pastel">
+  <h4>Ticket: {{ ticket }}</h4>
+  <table class="table">
+    <thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr></thead>
+    <tbody>
+      {% for f in filas %}
+        <tr>
+          <td>{{ f['producto'] }}</td>
+          <td>{{ f['cantidad'] }}</td>
+          <td>${{ '%.2f'|format(f['subtotal']) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><strong>Total: </strong> ${{ '%.2f'|format(total) }}</p>
+  <button onclick="window.print()" class="btn btn-outline-primary">Imprimir</button>
+  <a class="btn btn-secondary" href="{{ url_for('inventario') }}">Volver</a>
+</div>
+{% endblock %}
